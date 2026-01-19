@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: shelter-postgres
+    environment:
+      POSTGRES_DB: shelter
+      POSTGRES_USER: shelter
+      POSTGRES_PASSWORD: shelter
+    ports:
+      - "5432:5432"
+    volumes:
+      - shelter_pg:/var/lib/postgresql/data
+
+volumes:
+  shelter_pg:

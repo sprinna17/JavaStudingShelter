@@ -13,8 +13,6 @@ import java.util.List;
 public class User {
 
     @Id
-    private Long id1;
-    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -28,7 +26,6 @@ public class User {
     private LocalDate registrationDate = LocalDate.now();
 
     @OneToMany(mappedBy = "adopter", fetch = FetchType.LAZY)
-    private List<AdoptionRequest> adoptedDogs = new ArrayList<>();
-
+    private List<Dog> adoptedDogs = new ArrayList<>();
     private String status = "ACTIVE"; //
 }

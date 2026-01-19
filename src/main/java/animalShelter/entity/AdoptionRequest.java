@@ -26,7 +26,7 @@ public class AdoptionRequest {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id", nullable = false)
-    private User requester;
+    private User adopter;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dog_id", nullable = false)

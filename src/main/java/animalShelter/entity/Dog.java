@@ -1,12 +1,10 @@
 package animalShelter.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
-//@Entity  // temporalmente -> sin base de datos
+@Entity
+@Table(name = "dogs")
 @Data
 public class Dog {
     @Id

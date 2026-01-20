@@ -1,15 +1,12 @@
 package animalShelter.entity;
 
-import animalShelter.entity.AdoptionRequestStatus;
-import animalShelter.entity.Dog;
-import animalShelter.entity.User;
+import animalShelter.AdoptionRequestStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -26,7 +23,7 @@ public class AdoptionRequest {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id", nullable = false)
-    private User adopter;
+    private User requester;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dog_id", nullable = false)

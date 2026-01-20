@@ -25,7 +25,7 @@ public class User {
     private String address;
     private LocalDate registrationDate = LocalDate.now();
 
-    @OneToMany(mappedBy = "adopter", fetch = FetchType.LAZY)
-    private List<Dog> adoptedDogs = new ArrayList<>();
+    @OneToMany(mappedBy = "requester", fetch = FetchType.LAZY)
+    private List<AdoptionRequest> adoptedDogs = new ArrayList<>();
     private String status = "ACTIVE"; //
 }

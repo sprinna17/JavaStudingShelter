@@ -1,4 +1,4 @@
-package animalShelter.entity;
+package animalShelter;
 
 public enum Role {
     CLIENT,

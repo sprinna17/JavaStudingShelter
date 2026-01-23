@@ -1,12 +1,12 @@
 package animalShelter.service;
 
-import animalShelter.entity.User;
+import animalShelter.dto.UserCreateRequestDto;
+import animalShelter.dto.UserResponseDto;
+import animalShelter.entity.UserEntity;
 import animalShelter.repository.UserRepository;
-import io.micrometer.observation.ObservationFilter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -17,32 +17,75 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public UserResponseDto create(UserCreateRequestDto dto) {
+
+        UserEntity userEntity = UserEntity.builder()
+                .fullName(dto.getFullName())
+                .email(dto.getEmail())
+                .phone(dto.getPhone())
+                .address(dto.getAddress())
+                .build();
+
+        UserEntity saved = userRepository.save(userEntity);
+
+        return UserResponseDto.builder()
+                .id(saved.getId())
+                .fullName(saved.getFullName())
+                .email(saved.getEmail())
+                .phone(saved.getPhone())
+                .address(saved.getAddress())
+                .build();
     }
 
-    public Optional<User> getUserById(Long id) {          //Optional<User>
-        return userRepository.findById(id);
+    public UserResponseDto getById(Long id) {
+        UserEntity userEntity = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found: " + id));
+
+        return UserResponseDto.builder()
+                .id(userEntity.getId())
+                .fullName(userEntity.getFullName())
+                .email(userEntity.getEmail())
+                .phone(userEntity.getPhone())
+                .address(userEntity.getAddress())
+                .build();
     }
 
-    public Optional<User> getUserByEmail(String email) {  //Optional<User>
-        return userRepository.findByEmail(email);         // a ver si hay en repository
+    public List<UserResponseDto> getAll() {
+        return userRepository.findAll().stream()
+                .map(userEntity -> UserResponseDto.builder()
+                        .id(userEntity.getId())
+                        .fullName(userEntity.getFullName())
+                        .email(userEntity.getEmail())
+                        .phone(userEntity.getPhone())
+                        .address(userEntity.getAddress())
+                        .build())
+                .toList();
     }
 
-    public User createUser(User user) {
-        //  (email for ex.)
-        return userRepository.save(user);
+    public UserResponseDto update(Long id, UserCreateRequestDto dto) {
+        UserEntity existing = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found: " + id));
+
+        existing.setFullName(dto.getFullName());
+        existing.setEmail(dto.getEmail());
+        existing.setPhone(dto.getPhone());
+        existing.setAddress(dto.getAddress());
+
+        UserEntity saved = userRepository.save(existing);
+
+        return UserResponseDto.builder()
+                .id(saved.getId())
+                .fullName(saved.getFullName())
+                .email(saved.getEmail())
+                .phone(saved.getPhone())
+                .address(saved.getAddress())
+                .build();
     }
 
-    public User updateUser(Long id, User updatedUser) {
-        User existing = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
-
-
-        return userRepository.save(existing);
-    }
-
-    public void deleteUser(Long id) {
+    public void delete(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("User not found: " + id);
+        }
         userRepository.deleteById(id);
     }
 }

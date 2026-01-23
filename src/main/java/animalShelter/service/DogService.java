@@ -1,48 +1,49 @@
 package animalShelter.service;
 
-import animalShelter.entity.Dog;
+import animalShelter.entity.DogEntity;
+import animalShelter.repository.DogRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class DogService {
 
-    private final Map<Long, Dog> dogMap = new ConcurrentHashMap<>();
-    private long nextId = 1L;
+    private final DogRepository dogRepository;
 
-    public List<Dog> getAllDogs() {
-        return new ArrayList<>(dogMap.values());
+    public DogService(DogRepository dogRepository) {
+        this.dogRepository = dogRepository;
     }
 
-    public Optional<Dog> getDogById(Long id) {
-        return Optional.ofNullable(dogMap.get(id));
+    public List<DogEntity> getAllDogs() {
+        return dogRepository.findAll();
     }
 
-    public Dog createDog(Dog dog) {
-        if (dog.getId() != null) {
-            throw new IllegalArgumentException("Perro sin ID todavía");
-        }
-        long newId = nextId++;
-        dog.setId(newId);
-        dogMap.put(newId, dog);
-        return dog;
+    public DogEntity getDogById(Long id) {
+        return dogRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Dog not found: " + id));
     }
 
-    public Dog updateDog(Long id, Dog dogDetails) {
-        if (!dogMap.containsKey(id)) {
-            throw new RuntimeException("No encontrado el perro con id: " + id);
-        }
-        dogDetails.setId(id);
-        dogMap.put(id, dogDetails);
-        return dogDetails;
+    public DogEntity createDog(DogEntity dogEntity) {
+        dogEntity.setId(null);
+        return dogRepository.save(dogEntity);
+    }
+
+    public DogEntity updateDog(Long id, DogEntity dogEntityDetails) {
+        DogEntity existing = getDogById(id);
+
+        existing.setName(dogEntityDetails.getName());
+        existing.setBreed(dogEntityDetails.getBreed());
+        existing.setColor(dogEntityDetails.getColor());
+        existing.setAge(dogEntityDetails.getAge());
+
+        return dogRepository.save(existing);
     }
 
     public void deleteDog(Long id) {
-        dogMap.remove(id);
+        if (!dogRepository.existsById(id)) {
+            throw new RuntimeException("Dog not found: " + id);
+        }
+        dogRepository.deleteById(id);
     }
 }

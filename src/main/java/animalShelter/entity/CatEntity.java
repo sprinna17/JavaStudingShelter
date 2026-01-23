@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "dogs")
+@Table(name = "cat")
 @Data
-public class Dog {
+public class CatEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -14,5 +14,5 @@ public class Dog {
     private String breed;
     private String color;
     private int age;
-//    private String status; // "available", "adopted"
+
 }

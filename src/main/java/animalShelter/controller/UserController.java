@@ -1,16 +1,16 @@
 package animalShelter.controller;
 
-import animalShelter.entity.User;
+import animalShelter.dto.UserCreateRequestDto;
+import animalShelter.dto.UserResponseDto;
 import animalShelter.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
-import java.util.Optional;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
@@ -19,40 +19,32 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PostMapping
+    public ResponseEntity<UserResponseDto> create(
+            @Valid @RequestBody UserCreateRequestDto dto) {
+        return ResponseEntity.status(201).body(userService.create(dto));
+    }
+
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<UserResponseDto>> getAll() {
+        return ResponseEntity.ok(userService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)        //.map(user -> ResponseEntity.ok(user)) ???
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/email/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-        return userService.getUserByEmail(email)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User created = userService.createUser(user);
-        return ResponseEntity.status(201).body(created);
+    public ResponseEntity<UserResponseDto> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
-        User updated = userService.updateUser(id, user);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<UserResponseDto> update(
+            @PathVariable Long id,
+            @Valid @RequestBody UserCreateRequestDto dto) {
+        return ResponseEntity.ok(userService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        userService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

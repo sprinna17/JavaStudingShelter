@@ -14,5 +14,5 @@ public class DogEntity {
     private String breed;
     private String color;
     private int age;
-//    private String status; // "available", "adopted"
+
 }

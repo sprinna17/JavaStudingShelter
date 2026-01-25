@@ -10,9 +10,9 @@ import java.util.List;
 @Repository
 public interface AdoptionRequestRepository extends JpaRepository<AdoptionRequestEntity, Long> {
 
-    List<AdoptionRequestEntity> findByRequesterId(Long requesterId);
+    List<AdoptionRequestEntity> findByRequester_Id(Long requesterId);
 
-    List<AdoptionRequestEntity> findByDogId(Long dogId);
+    List<AdoptionRequestEntity> findByDog_Id(Long dogId);
 
     List<AdoptionRequestEntity> findByStatus(AdoptionRequestStatus status);
 }

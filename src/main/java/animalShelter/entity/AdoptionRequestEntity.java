@@ -27,7 +27,7 @@ public class AdoptionRequestEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dog_id", nullable = false)
-    private DogEntity dogEntity;
+    private DogEntity dog;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
